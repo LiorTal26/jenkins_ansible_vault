@@ -1,8 +1,11 @@
 ---
 - name: nginx installation
   hosts: [myVM]
+  # hosts: myVM
   become: yes
-
+- name: Set nginx port using Jenkins variable
+  set_fact:
+    nginx_port: "{{ lookup('env', 'NGINX_PORT') | default('80') }}"-
   tasks:
    
     - name: Update apt cache
@@ -19,26 +22,28 @@
         name: nginx
         state: started
         enabled: yes
-    
-    
 
-    # - name: enable and start firewalld service
-    #   systemd:
-    #     name: firewalld
-    #     state: started
-    #     enabled: yes
-    # - name: permit traffic in default zone on port 22/tcp
-    #   ansible.posix.firewalld:
-    #     port: 22/tcp
-    #     permanent: yes
-    #     state: enabled
-    #     immediate: yes
-    # - name: permit traffic in default zone on port 3306/tcp
-    #   ansible.posix.firewalld:
-    #     port: 3306/tcp
-    #     permanent: yes
-    #     state: enabled
-    #     immediate: yes
+    - name: add new index.html
+      copy:
+        src: ./ansible/playbooks/index.html
+        dest: "/var/www/html/index.html"
+    
+    - name: add new nginx.conf
+      copy:
+        src: ./ansible/playbooks/nginx.conf
+        dest: "/etc/nginx/sites-available/default"
 
+    - name: Configure nginx to listen on the custom port
+      template:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+      notify: restart nginx
+  
+    # - name: symlink nginx.conf
+    #   file:
+    #     src: /etc/nginx/sites-available/default
+    #     dest: /etc/nginx/sites-enabled/default
+    #     state: link
+    # - name: restart nginx
  
     
