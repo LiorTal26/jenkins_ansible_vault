@@ -5,6 +5,9 @@
   become: yes
 
   tasks:
+    - debug:
+      msg: "nginx_port is {{ nginx_port }}"
+
     - name: Set nginx port using Jenkins variable
       set_fact:
         nginx_port: "{{ lookup('env', 'NGINX_PORT') | default('80') }}"
@@ -31,7 +34,7 @@
     
     - name: add new nginx.conf
       copy:
-        src: "{{playbook_dir}}/../nginx.conf"
+        src: "{{playbook_dir}}/../playbooks/nginx.conf"
         dest: "/etc/nginx/sites-available/default"
 
     - name: restart nginx
