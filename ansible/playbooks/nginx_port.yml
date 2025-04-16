@@ -31,14 +31,15 @@
     
     - name: add new nginx.conf
       copy:
-        src: ./ansible/playbooks/nginx.conf
-        dest: "/etc/nginx/sites-available/default"
-
-    - name: Configure nginx to listen on the custom port
-      template:
-        src: nginx.conf
+        src: "{{ playbook_dir }}/../playbooks/nginx.conf"
         dest: "/etc/nginx/sites-available/default"
       notify: restart nginx
+
+    # - name: Configure nginx to listen on the custom port
+    #   template:
+    #     src: nginx.conf
+    #     dest: "/etc/nginx/sites-available/default"
+    #   notify: restart nginx
   
     # - name: symlink nginx.conf
     #   file:
