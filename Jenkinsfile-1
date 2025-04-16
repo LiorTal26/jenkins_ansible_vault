@@ -53,7 +53,14 @@ pipeline {
                     ansible --version
                     ansible-playbook --version
                     ansible-galaxy --version
-                    ansible-playbook -i inventory/hosts.ini playbooks/nginx_port.yaml \
+                    
+                """
+            }
+        }
+        stage('use ansible playbook'){
+            steps{
+                sh """
+                    ansible-playbook -i ansible/inventory/hosts ansible/playbooks/nginx_port.yml 
                 """
             }
         }

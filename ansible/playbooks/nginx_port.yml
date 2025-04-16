@@ -1,6 +1,6 @@
 ---
 - name: nginx installation
-  hosts: myVM
+  hosts: [myVM]
   become: yes
 
   tasks:
