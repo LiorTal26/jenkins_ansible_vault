@@ -24,11 +24,11 @@
         name: nginx
         state: present
 
-    - name: Start nginx service
-      systemd:
-        name: nginx
-        state: started
-        enabled: yes
+    # - name: Start nginx service
+    #   systemd:
+    #     name: nginx
+    #     state: started
+    #     enabled: yes
 
     - name: add new index.html
       copy:
@@ -39,6 +39,7 @@
     #   copy:
     #     src: "{{ playbook_dir }}/nginx.conf.j2" 
     #     dest: "/etc/nginx/sites-available/default"
+
     - name: Deploy nginx.conf rendered with the selected port
       template:
         src: "{{ playbook_dir }}/nginx.conf.j2"
@@ -47,7 +48,7 @@
         group: root
         mode: '0644'
       notify: Restart nginx
-      
+
     - name: restart nginx
       systemd:
         name: nginx
