@@ -1,8 +1,27 @@
+---
 - name: nginx installation
   hosts: myVM
   become: yes
 
   tasks:
+   
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    
+
     # - name: enable and start firewalld service
     #   systemd:
     #     name: firewalld
@@ -21,16 +40,5 @@
     #     state: enabled
     #     immediate: yes
 
-    - name: install nginx
-      ansible.builtin.yum:
-        name: nginx
-        state: present
-    - name: start nginx
-      ansible.builtin.systemd:
-        name: nginx
-        state: started
-        enabled: yes
-    - name: use jenkins vault secret
-      ansible.builtin.debug:
-        msg: "{{ lookup('community.general.vault', 'jenkins') }}"
+ 
     

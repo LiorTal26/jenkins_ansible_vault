@@ -53,6 +53,7 @@ pipeline {
                     ansible --version
                     ansible-playbook --version
                     ansible-galaxy --version
+                    ansible-playbook -i inventory/hosts.ini playbooks/nginx_port.yaml \
                 """
             }
         }
