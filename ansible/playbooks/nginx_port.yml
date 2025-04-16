@@ -3,10 +3,11 @@
   hosts: [myVM]
   # hosts: myVM
   become: yes
-- name: Set nginx port using Jenkins variable
-  set_fact:
-    nginx_port: "{{ lookup('env', 'NGINX_PORT') | default('80') }}"-
+
   tasks:
+    - name: Set nginx port using Jenkins variable
+      set_fact:
+        nginx_port: "{{ lookup('env', 'NGINX_PORT') | default('80') }}"
    
     - name: Update apt cache
       apt:
