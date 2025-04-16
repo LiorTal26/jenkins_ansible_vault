@@ -1,15 +1,61 @@
 pipeline {
-  agent {label 'linux'}
+    agent any
 
-  stages {
-    stage('Hello') {
-      steps {
-        sh '''
-          ansible --version
-          ansible-playbook --version
-          ansible-galaxy --version
-        '''
-      }
+    stages {
+        stage('Add Key to Vault') {
+            steps {
+                // "vault-key-new" is your Jenkins credential ID. 
+                // Jenkins loads it into the environment var VAULT_TOKEN.
+                withCredentials([string(credentialsId: 'vault-key-new', variable: 'VAULT_TOKEN')]) {
+                    sh """
+                        curl --header "X-Vault-Token: $VAULT_TOKEN" \
+                             --header "Content-Type: application/json" \
+                             --request POST \
+                             --data '{"data": {"nginx-port": "6789"}}' \
+                             http://vault:8200/v1/kv/data/nginx-secrets
+                    """
+                }
+            }
+        }
+
+        stage('Read Vault Secret') {
+            steps {
+                withCredentials([string(credentialsId: 'vault-key-new', variable: 'VAULT_TOKEN')]) {
+                    // 1) Pull the JSON from Vault into a local file
+                    sh """
+                        curl --silent --header "X-Vault-Token: $VAULT_TOKEN" \
+                             --request GET \
+                             http://vault:8200/v1/kv/data/nginx-secrets > nginx-secrets.json
+                    """
+                }
+
+                script {
+                    // 2) Parse the JSON to extract the port
+                    def json = readJSON file: 'nginx-secrets.json'
+                    def secretPort = json.data.data["nginx-port"]
+                    echo "The secret port from Vault is: ${secretPort}"
+                    
+                    // 3) Example usage: pass the port as an Ansible extra-var
+                    // (Replace with your real inventory & playbook)
+                    // sh """
+                    //   ansible-playbook -i inventory/nginx_hosts \
+                    //                     playbooks/nginx_port.yaml \
+                    //                     --extra-vars "nginx_port=${secretPort}"
+                    
+                    // """
+                }
+            }
+        }
+
+        stage('show ansible ver'){
+            steps{
+                sh """
+                    ansible --version
+                    ansible-playbook --version
+                    ansible-galaxy --version
+                """
+            }
+        }
+        
     }
-  }
 }
