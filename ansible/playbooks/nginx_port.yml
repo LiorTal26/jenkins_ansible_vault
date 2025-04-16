@@ -35,11 +35,19 @@
         src: "{{ playbook_dir }}/../webfile/index.html"
         dest: "/var/www/html/index.html"
     
-    - name: add new nginx.conf
-      copy:
-        src: "{{ playbook_dir }}/nginx.conf.j2" 
-        dest: "/etc/nginx/sites-available/default"
-
+    # - name: add new nginx.conf
+    #   copy:
+    #     src: "{{ playbook_dir }}/nginx.conf.j2" 
+    #     dest: "/etc/nginx/sites-available/default"
+    - name: Deploy nginx.conf rendered with the selected port
+      template:
+        src: "{{ playbook_dir }}/nginx.conf.j2"
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart nginx
+      
     - name: restart nginx
       systemd:
         name: nginx
