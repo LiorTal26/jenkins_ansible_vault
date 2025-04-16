@@ -33,8 +33,11 @@
       copy:
         src: "{{playbook_dir}}/../nginx.conf"
         dest: "/etc/nginx/sites-available/default"
-      notify: restart nginx
 
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
     # - name: Configure nginx to listen on the custom port
     #   template:
     #     src: nginx.conf
