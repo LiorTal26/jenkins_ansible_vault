@@ -34,7 +34,7 @@ pipeline {
                     def json = readJSON file: 'nginx-secrets.json'
                     def secretPort = json.data.data["nginx-port"]
                     echo "The secret port from Vault is: ${secretPort}"
-
+                    
                     env.NGINX_PORT_SECRET = secretPort
                     // 3) Example usage: pass the port as an Ansible extra-var
                     // (Replace with your real inventory & playbook)
