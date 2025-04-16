@@ -26,7 +26,7 @@
 
     - name: add new index.html
       copy:
-        src: /webfile/index.html
+        src: "{{ playbook_dir }}/../webfile/index.html"
         dest: "/var/www/html/index.html"
     
     - name: add new nginx.conf
@@ -37,7 +37,7 @@
     - name: Configure nginx to listen on the custom port
       template:
         src: nginx.conf
-        dest: /etc/nginx/sites-available/default
+        dest: "/etc/nginx/sites-available/default"
       notify: restart nginx
   
     # - name: symlink nginx.conf
