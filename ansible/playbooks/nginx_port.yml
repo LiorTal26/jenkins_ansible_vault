@@ -31,7 +31,7 @@
     
     - name: add new nginx.conf
       copy:
-        src: "{{ playbook_dir }}/../playbooks/nginx.conf"
+        src: ./playbooks/nginx.conf
         dest: "/etc/nginx/sites-available/default"
       notify: restart nginx
 
