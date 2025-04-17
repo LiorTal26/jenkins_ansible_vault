@@ -1,6 +1,6 @@
 ---
 - name: nginx installation
-  hosts: [myVM]
+  hosts: servers
   # hosts: myVM
   become: yes
 
@@ -23,9 +23,7 @@
       apt:
         name: nginx
         state: present
-
     
-
     - name: add new index.html
       copy:
         src: "{{ playbook_dir }}/../webfile/index.html"
@@ -50,18 +48,6 @@
         name: nginx
         state: started
         enabled: yes
-        
-    # - name: Configure nginx to listen on the custom port
-    #   template:
-    #     src: nginx.conf
-    #     dest: "/etc/nginx/sites-available/default"
-    #   notify: restart nginx
-  
-    # - name: symlink nginx.conf
-    #   file:
-    #     src: /etc/nginx/sites-available/default
-    #     dest: /etc/nginx/sites-enabled/default
-    #     state: link
-    # - name: restart nginx
+
  
     

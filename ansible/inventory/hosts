@@ -1,2 +1,5 @@
 [myVM]
 192.168.1.104 ansible_user=lior
+
+[servers]
+lior.aws.cts.care ansible_user=ubuntu
