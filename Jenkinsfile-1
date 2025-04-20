@@ -21,7 +21,7 @@ pipeline {
         stage('Read Vault Secret') {
             steps {
                 withCredentials([string(credentialsId: 'vault-key-new', variable: 'VAULT_TOKEN')]) {
-                    Pull the JSON from Vault into a local file
+                    // Pull the JSON from Vault into a local file
                     sh """
                         curl --silent --header "X-Vault-Token: $VAULT_TOKEN" \
                              --request GET \
