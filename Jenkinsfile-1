@@ -21,7 +21,7 @@ pipeline {
         stage('Read Vault Secret') {
             steps {
                 withCredentials([string(credentialsId: 'vault-key-new', variable: 'VAULT_TOKEN')]) {
-                    // 1) Pull the JSON from Vault into a local file
+                    Pull the JSON from Vault into a local file
                     sh """
                         curl --silent --header "X-Vault-Token: $VAULT_TOKEN" \
                              --request GET \
@@ -30,20 +30,13 @@ pipeline {
                 }
 
                 script {
-                    // 2) Parse the JSON to extract the port
+                    
                     def json = readJSON file: 'nginx-secrets.json'
                     def secretPort = json.data.data["nginx-port"]
                     echo "The secret port from Vault is: ${secretPort}"
                     
                     env.NGINX_PORT_SECRET = secretPort
-                    // 3) Example usage: pass the port as an Ansible extra-var
-                    // (Replace with your real inventory & playbook)
-                    // sh """
-                    //   ansible-playbook -i inventory/nginx_hosts \
-                    //                     playbooks/nginx_port.yaml \
-                    //                     --extra-vars "nginx_port=${secretPort}"
                     
-                    // """
                 }
             }
         }
