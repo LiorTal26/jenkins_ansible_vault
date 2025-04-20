@@ -5,8 +5,6 @@
   become: yes
 
   tasks:
-    
-
     - name: Set nginx port using Jenkins variable
       set_fact:
         nginx_port: "{{ lookup('env', 'NGINX_PORT') | default('80') }}"
@@ -41,18 +39,14 @@
         owner: root
         group: root
         mode: '0644'
-
-    - name: Start nginx service
-      systemd:
-        name: nginx
-        state: started
-        enabled: yes
+      notify: Reload nginx
     
-    - name: Start nginx service
-      systemd:
-        name: nginx
-        state: restarted
-        enabled: yes
+  handlers:
+  - name: Reload nginx
+    systemd:
+      name: nginx
+      state: restarted
+      enabled: yes
 
  
     
