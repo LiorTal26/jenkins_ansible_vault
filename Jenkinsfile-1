@@ -72,7 +72,7 @@ pipeline {
     steps {
         script {
             sh """
-                # ensure the role’s vars directory exists
+                # ensure the role's vars directory exists
                 mkdir -p roles/nginx/vars
 
                 # write out the vars file
