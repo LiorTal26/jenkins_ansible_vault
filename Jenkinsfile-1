@@ -66,10 +66,8 @@ pipeline {
         stage('use ansible playbook'){
             steps{
                 sh """
-
-
                     ansible-playbook -i inventory playbook.yml \
-                                      --extra-vars "nginx_port=${NGINX_HEADERS_SECRET} header_secret=${NGINX_HEADER_SECRET}" \
+                                      --extra-vars "nginx_port=${NGINX_PORT_SECRET} header_secret=${NGINX_HEADERS_SECRET}" \
                     
                 """
             }
