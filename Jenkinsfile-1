@@ -68,6 +68,22 @@ pipeline {
                 """
             }
         }
+        stage('Generate ansible vars file'){
+            steps{
+                script{
+                    sh """
+                        mkdir -p ansible/roles/nginx/vars
+                        cat > ansible/roles/nginx/vars/main.yml <<EOF
+                        ---
+                        nginx_port: ${NGINX_PORT_SECRET}
+                        header_secret: ${NGINX_HEADERS_SECRET}
+                        jenkins_build_number: ${JENKINS_BUILD_NUMBER}
+                    EOF
+                        echo "Wrote ansible/roles/nginx/vars/main.yml"
+                    """
+                }
+            }
+        }
         stage('use ansible playbook'){
             steps{
                 sh """
