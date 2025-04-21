@@ -73,10 +73,10 @@ pipeline {
                 sh """
                     mkdir -p roles/nginx/vars
                     cat > roles/nginx/vars/main.yml <<EOF
-                    ---
-                    nginx_port: ${NGINX_PORT_SECRET}
-                    header_secret: ${NGINX_HEADERS_SECRET}
-                    jenkins_build_number: ${JENKINS_BUILD_NUMBER}
+---
+nginx_port: ${NGINX_PORT_SECRET}
+header_secret: ${NGINX_HEADERS_SECRET}
+jenkins_build_number: ${JENKINS_BUILD_NUMBER}
                 """
             }
         }
