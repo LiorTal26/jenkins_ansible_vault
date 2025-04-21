@@ -6,6 +6,7 @@ pipeline {
         string(name: 'headers_name',
            defaultValue: 'Lior',
            description: 'Header secret to send to Ansible')
+        
   }
 
     stages {
@@ -46,6 +47,9 @@ pipeline {
 
                     def headerSecret = params.headers_name
                     echo "the secret headers from jenkins parameter is: ${headerSecret}"
+
+                    echo "jenkins build number is: ${BUILD_NUMBER}"
+                    echo "jenkins build id is: ${BUILD_ID}"
                     
                     env.NGINX_PORT_SECRET = secretPort
                     env.NGINX_HEADERS_SECRET = headerSecret
