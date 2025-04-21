@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+
+    parameters {
+        string(name: 'headers_name',
+           defaultValue: 'Lior',
+           description: 'Header secret to send to Ansible')
+  }
+
     stages {
         stage('Add Key to Vault') {
             steps {
@@ -26,6 +33,7 @@ pipeline {
                         curl --silent --header "X-Vault-Token: $VAULT_TOKEN" \
                              --request GET \
                              http://vault:8200/v1/kv/data/nginx-secrets > nginx-secrets.json
+                        
                     """
                 }
 
@@ -33,10 +41,14 @@ pipeline {
                     
                     def json = readJSON file: 'nginx-secrets.json'
                     def secretPort = json.data.data["nginx-port"]
+
                     echo "The secret port from Vault is: ${secretPort}"
+
+                    def headerSecret = params.headers_name
+                    echo "the secret headers from jenkins parameter is: ${headerSecret}"
                     
                     env.NGINX_PORT_SECRET = secretPort
-                    
+                    env.NGINX_HEADERS_SECRET = headerSecret
                 }
             }
         }
@@ -54,8 +66,11 @@ pipeline {
         stage('use ansible playbook'){
             steps{
                 sh """
-                    ansible-playbook -i ansible/inventory/hosts ansible/playbooks/nginx_port.yml \
-                                      --extra-vars "nginx_port=${NGINX_PORT_SECRET}" 
+
+
+                    ansible-playbook -i inventory playbook.yml \
+                                      --extra-vars "nginx_port=${NGINX_HEADERS_SECRET} header_secret=${NGINX_HEADER_SECRET}" \
+                    
                 """
             }
         }
