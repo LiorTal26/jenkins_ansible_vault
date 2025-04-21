@@ -72,7 +72,7 @@ pipeline {
             steps{
                 sh """
                     ansible-playbook -i inventory.ini playbook.yml \
-                                      --extra-vars "nginx_port=${NGINX_PORT_SECRET} headers_name=${NGINX_HEADERS_SECRET} jenkins_build_number=${JENKINS_BUILD_NUMBER} \
+                                      --extra-vars "nginx_port=${NGINX_PORT_SECRET} headers_name=${NGINX_HEADERS_SECRET} jenkins_build_number=${JENKINS_BUILD_NUMBER}" \
                     
                 """
             }
