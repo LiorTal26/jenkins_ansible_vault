@@ -39,20 +39,17 @@ pipeline {
                 }
 
                 script {
-                    
+                    // read json file from vault secret
                     def json = readJSON file: 'nginx-secrets.json'
                     def secretPort = json.data.data["nginx-port"]
 
-                    echo "The secret port from Vault is: ${secretPort}"
-
+                    // take header secret from jenkins params
                     def headerSecret = params.headers_name
-                    echo "the secret headers from jenkins parameter is: ${headerSecret}"
-
-                    echo "jenkins build number is: ${BUILD_NUMBER}"
-                    
+                
+                    // set the env to pass to ansible
                     env.NGINX_PORT_SECRET = secretPort
                     env.NGINX_HEADERS_SECRET = headerSecret
-
+                    // set the jenkins build number from jenkins defualt variable
                     env.JENKINS_BUILD_NUMBER = "${BUILD_NUMBER}"
                 }
             }
@@ -68,9 +65,10 @@ pipeline {
                 """
             }
         }
+        // use this folder file option to pass the vars to your ansible folder roles/nginx/vars/main.yml 
         stage('Generate Ansible vars file') {
-    steps {
-        script {
+            steps {
+                 script {
             sh """
                 # ensure the role's vars directory exists
                 mkdir -p roles/nginx/vars
@@ -95,6 +93,15 @@ EOF
                 """
             }
         }
+        // Uncomment the following stage if you want to use extra vars directly in the ansible-playbook command
+        // stage('use ansible playbook with extra vars'){
+        //     steps{
+        //         sh """
+        //             ansible-playbook -i inventory.ini playbook.yml \
+        //                 --extra-vars "nginx_port=${NGINX_PORT_SECRET} headers_name=${NGINX_HEADERS_SECRET} jenkins_build_number=${JENKINS_BUILD_NUMBER}"
+        //         """
+        //     }
+        // }
         
     }
 }

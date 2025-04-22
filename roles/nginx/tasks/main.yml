@@ -8,6 +8,10 @@
   debug:
     msg: "Header secret is {{ headers_name }}"
 
+- name: show jenkins build number
+  debug:
+    msg: "Jenkins build number is {{ jenkins_build_number }}"
+
 - name: Update apt cache
   apt:
     update_cache: yes
