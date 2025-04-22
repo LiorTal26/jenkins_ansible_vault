@@ -37,6 +37,8 @@ This project demonstrates how to use Jenkins to retrieve and add secrets from a 
 
 3. **Deployment**:
     - Ansible will deploy the application to the AWS instance and configure the NGINX web page using the provided variables.
+    - update nginx port using vault secret
+    - update index.html page header and build number using jenkins parameters.
 
 ## Notes
 
